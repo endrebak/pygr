@@ -151,7 +151,7 @@ import classutil
 from annotation import AnnotationDB, AnnotationSeq, AnnotationSlice, \
      AnnotationServer, AnnotationClient
 import logger
-import seqfmt
+from pygr.seqfmt import read_fasta_lengths
 
 from dbfile import NoSuchFileError
 

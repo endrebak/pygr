@@ -54,42 +54,19 @@ Topic :: Scientific/Engineering :: Bio-Informatics
 # split into lines and filter empty ones
 CLASSIFIERS = filter(None, CLASSIFIERS.splitlines())
 
-# Setuptools should handle all this automatically
-if 'setuptools' in sys.modules:
-    try:
-        import pkg_resources
-        pkg_resources.require('Pyrex>=0.9.8')
-        ext = 'pyx'
-    except pkg_resources.DistributionNotFound:
-        ext = 'c'
-    cmdclass = {}
-else:
-# if pyrex is not present try compiling the C files
-    try:
-        from Pyrex.Compiler.Version import version as PYREX_VERSION
-        from Pyrex.Distutils import build_ext
-        if PYREX_VERSION < "0.9.8":
-            error("pyrex version >=0.9.8 required, found %s" % PYREX_VERSION)
-        ext = 'pyx'
-        cmdclass = {'build_ext': build_ext}
-    except ImportError, exc:
-        ext = 'c'
-        cmdclass = {}
-
 # extension sources
-seqfmt_src = [os.path.join('pygr', 'seqfmt.%s' % ext)]
-cdict_src = [os.path.join('pygr', 'cgraph.c'),
-             os.path.join('pygr', 'cdict.%s' % ext)]
-nested_src = [os.path.join('pygr', 'intervaldb.c'),
-              os.path.join('pygr', 'cnestedlist.%s' % ext),
-              os.path.join('pygr', 'apps', 'maf2nclist.c')]
+
+extensions = [Extension("pygr.cdict", ["pygr/cdict.pyx", "pygr/cgraph.c"]),
+              Extension("pygr.seqfmt", ["pygr/seqfmt.pyx"]),
+              Extension("pygr.cnestedlist", ["pygr/cnestedlist.pyx", "pygr/apps/maf2nclist.c", "pygr/intervaldb.c"])]
 
 
 def main():
     setup(
         name = PYGR_NAME,
         version= PYGR_VERSION,
-        ext_modules = cythonize([Extension("pygr", ["pygr/cdict.pyx", "pygr/seqfmt.pyx", "pygr/cnestedlist.pyx"])]),
+        packages=find_packages(),
+        ext_modules = cythonize(extensions),
         description = \
 'Pygr, a Python graph-database toolkit oriented primarily on bioinformatics',
         long_description = __doc__,
@@ -101,7 +78,8 @@ def main():
 
         package_data={'': ['*.pyx', '*.pxd', '*.h', '*.c']},
         include_dirs=["."],
-        packages = ['pygr', 'pygr.apps'],
+
+        # packages = ['pygr', 'pygr.apps'],
 
         # ext_modules = [
         #     Extension('pygr.seqfmt', seqfmt_src),
@@ -109,7 +87,6 @@ def main():
         #     Extension('pygr.cnestedlist', nested_src),
         # ],
 
-        cmdclass = cmdclass,
      )
 
 if __name__ == '__main__':

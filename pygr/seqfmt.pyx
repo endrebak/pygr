@@ -18,7 +18,7 @@ cdef extern from "string.h":
     char *strcpy(char *, char *)
 
 
-def read_fasta_lengths(d, pyfile, filename):
+cpdef read_fasta_lengths(d, pyfile, filename):
     'read seq lengths from python file object, save into dictionary d'
     cdef int i
     cdef long long seqLength, ipos, offset # MUST USE 64-BIT INT!!!

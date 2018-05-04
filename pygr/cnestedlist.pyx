@@ -2,6 +2,7 @@ import sequence
 import nlmsa_utils
 import logger
 
+cimport cnestedlist as cn
 
 cdef class IntervalDBIterator:
 
@@ -540,7 +541,7 @@ cdef class NLMSASlice:
 
     self.im = it.getIntervalMap() # RELEASE THIS ARRAY FROM THE ITERATOR
     self.n = it.nhit # TOTAL #INTERVALS SAVED FROM JOIN
-    qsort(self.im, self.n, sizeof(IntervalMap), imstart_qsort_cmp) # ORDER BY start
+    qsort(self.im, self.n, sizeof(IntervalMap), cn.imstart_qsort_cmp) # ORDER BY start
 
     n = 0
     for i from 0 <= i < self.nseqBounds: # COUNT NON-LPO SEQUENCES

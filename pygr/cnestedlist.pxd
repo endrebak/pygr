@@ -31,7 +31,7 @@ cdef extern from "string.h":
   char *strdup(char *)
   char *strcat(char *,char *)
 
-cdef extern from "intervaldb.h":
+cdef extern from "pygr/intervaldb.h":
   ctypedef struct IntervalMap:
     int start
     int end
@@ -50,7 +50,7 @@ cdef extern from "intervaldb.h":
 
   ctypedef struct SubheaderFile:
     pass
-  
+
   ctypedef struct IntervalDBFile:
     int n
     int ntop
@@ -96,7 +96,7 @@ cdef extern from "intervaldb.h":
 
 
 
-cdef extern from "apps/maf2nclist.h":
+cdef extern from "pygr/apps/maf2nclist.h":
   ctypedef struct SeqNameID_T:
     char *p
     int id
@@ -190,7 +190,7 @@ cdef class NLMSASequence:
   cdef readonly object filestem
   cdef readonly NLMSA nlmsaLetters
   cdef readonly object buildList
-  
+
   cdef int saveInterval(self,IntervalMap im[],int n,int expand_self,FILE *ifile)
 
 cdef class NLMSASlice:
@@ -221,4 +221,3 @@ cdef class NLMSANode:
 cdef class NLMSASliceIterator:
   cdef int ipos,istart,istop
   cdef NLMSASlice nlmsaSlice
-
