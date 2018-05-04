@@ -10,14 +10,19 @@ alternative splicing patterns, to comparative genomics queries of
 multi-genome alignment data.
 """
 
+from distutils.core import setup
+# from distutils.extension import Extension
+from setuptools import find_packages, Extension, Command
+from Cython.Build import cythonize
+
 import os
 import sys
 
-try:
-    from setuptools import setup, Extension
-except ImportError:
-    print 'Setuptools not imported, falling back to distutils'
-    from distutils.core import setup, Extension
+# try:
+#     from setuptools import setup, Extension
+# except ImportError:
+#     # print 'Setuptools not imported, falling back to distutils'
+#     from distutils.core import setup, Extension
 
 import pygr
 
@@ -84,6 +89,7 @@ def main():
     setup(
         name = PYGR_NAME,
         version= PYGR_VERSION,
+        ext_modules = cythonize([Extension("pygr", ["pygr/cdict.pyx", "pygr/seqfmt.pyx", "pygr/cnestedlist.pyx"])]),
         description = \
 'Pygr, a Python graph-database toolkit oriented primarily on bioinformatics',
         long_description = __doc__,
@@ -93,13 +99,15 @@ def main():
         license = 'New BSD License',
         classifiers = CLASSIFIERS,
 
+        package_data={'': ['*.pyx', '*.pxd', '*.h', '*.c']},
+        include_dirs=["."],
         packages = ['pygr', 'pygr.apps'],
 
-        ext_modules = [
-            Extension('pygr.seqfmt', seqfmt_src),
-            Extension('pygr.cdict', cdict_src),
-            Extension('pygr.cnestedlist', nested_src),
-        ],
+        # ext_modules = [
+        #     Extension('pygr.seqfmt', seqfmt_src),
+        #     Extension('pygr.cdict', cdict_src),
+        #     Extension('pygr.cnestedlist', nested_src),
+        # ],
 
         cmdclass = cmdclass,
      )
